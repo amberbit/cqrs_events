@@ -9,6 +9,8 @@ defmodule Cqrs.Events do
     children = [
       # Define workers and child supervisors to be supervised
       # worker(Cqrs.Events.Worker, [arg1, arg2, arg3]),
+      worker(Cqrs.Events.Db, [Moebius.get_connection(:cqrs_events)]),
+      worker(Cqrs.Events.Server, [Cqrs.Events.Server]),
     ]
 
     # See http://elixir-lang.org/docs/stable/elixir/Supervisor.html

@@ -14,7 +14,7 @@ defmodule Cqrs.Events.Mixfile do
   #
   # Type "mix help compile.app" for more information
   def application do
-    [applications: [:logger, :phoenix], # replace phoenix with phoenix_pubsub when released
+    [applications: [:logger, :moebius, :gproc], # replace phoenix with phoenix_pubsub when released
      mod: {Cqrs.Events, []}]
   end
 
@@ -29,7 +29,9 @@ defmodule Cqrs.Events.Mixfile do
   # Type "mix help deps" for more examples and options
   defp deps do
     [
-      {:phoenix, "~> 1.1.4"}, # replace with phoenix_pubsub once it's released
+      {:moebius, "~> 2.0.0"},
+      {:poison, "~> 2.1.0", override: true },
+      {:gproc, "~> 0.5.0"},
     ]
   end
 end
