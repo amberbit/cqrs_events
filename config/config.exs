@@ -28,6 +28,8 @@ use Mix.Config
 # here (which is why it is important to import them last).
 #
 
+config :gproc, gproc_dist: :all
+
 if File.exists?("./config/#{Mix.env}.exs") do
   IO.puts "Loading..."
   import_config "#{Mix.env}.exs"

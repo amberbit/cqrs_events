@@ -5,3 +5,4 @@ erl_crash.dump
 *.ez
 /config/test.exs
 /config/dev.exs
+/gproc_dist*

@@ -32,6 +32,7 @@ defmodule Cqrs.Events.Mixfile do
       {:moebius, "~> 2.0.0"},
       {:poison, "~> 2.1.0", override: true },
       {:gproc, "~> 0.5.0"},
+      {:gen_leader, "~> 0.1.0"},
     ]
   end
 end
