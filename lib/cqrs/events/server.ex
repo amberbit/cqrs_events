@@ -14,13 +14,8 @@ defmodule Cqrs.Events.Server do
   # Public API
 
   def trigger(event, payload \\ %{}) do
-    GenServer.call(__MODULE__, {:event, payload})
+    GenServer.call(__MODULE__, {event, payload})
 
-    find_handlers(event, true)
-    |> Enum.each( &(cast_to_handler(&1, payload)) )
-
-    find_handlers(event, false)
-    |> Enum.each( &(call_handler(&1, payload)) )
   end
 
   defp find_handlers(event, async) do
@@ -47,6 +42,12 @@ defmodule Cqrs.Events.Server do
     db(:cqrs_events)
     |> insert(%{event: event, payload: payload})
     |> Db.run
+
+    find_handlers(event, true)
+    |> Enum.each( &(cast_to_handler(&1, payload)) )
+
+    find_handlers(event, false)
+    |> Enum.each( &(call_handler(&1, payload)) )
 
     {:reply, :ok, state}
   end

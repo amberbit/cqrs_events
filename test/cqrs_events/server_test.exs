@@ -1,14 +1,5 @@
 defmodule Cqrs.Events.ServerTest.AsyncHandler do
-  use GenServer
-
-  def start_link(event_name) do
-    GenServer.start_link __MODULE__, %{event_name: event_name, async: true, messages_count: 0}, []
-  end
-
-  def init(args) do
-    :gproc.reg({:p, :g, args.event_name}, %{async: args.async, mod: __MODULE__})
-    {:ok, args}
-  end
+  use Cqrs.Events.AsyncHandler
 
   def handle_call(:messages_count, _from, state) do
     {:reply, state.messages_count, state}
@@ -20,16 +11,7 @@ defmodule Cqrs.Events.ServerTest.AsyncHandler do
 end
 
 defmodule Cqrs.Events.ServerTest.SyncHandler do
-  use GenServer
-
-  def start_link(event_name) do
-    GenServer.start_link __MODULE__, %{event_name: event_name, async: false, messages_count: 0}, []
-  end
-
-  def init(args) do
-    :gproc.reg({:p, :g, args.event_name}, %{async: args.async, mod: __MODULE__})
-    {:ok, args}
-  end
+  use Cqrs.Events.SyncHandler
 
   def handle_call(:messages_count, _from, state) do
     {:reply, state.messages_count, state}
@@ -41,16 +23,7 @@ defmodule Cqrs.Events.ServerTest.SyncHandler do
 end
 
 defmodule Cqrs.Events.ServerTest.SyncCrashingHandler do
-  use GenServer
-
-  def start_link(event_name) do
-    GenServer.start_link __MODULE__, %{event_name: event_name, async: false, messages_count: 0}, []
-  end
-
-  def init(args) do
-    :gproc.reg({:p, :g, args.event_name}, %{async: args.async, mod: __MODULE__})
-    {:ok, args}
-  end
+  use Cqrs.Events.SyncHandler
 
   def handle_call(:messages_count, _from, state) do
     {:reply, state.messages_count, state}
@@ -69,6 +42,7 @@ defmodule Cqrs.Events.ServerTest do
   alias Cqrs.Events.ServerTest.AsyncHandler
   alias Cqrs.Events.ServerTest.SyncHandler
   alias Cqrs.Events.ServerTest.SyncCrashingHandler
+  import ExUnit.CaptureIO
 
   Moebius.DocumentQuery
 
@@ -91,7 +65,7 @@ defmodule Cqrs.Events.ServerTest do
   end
 
   test "should dispatch to async events handlers" do
-    {:ok, pid} = AsyncHandler.start_link("UserCreated")
+    {:ok, pid} = AsyncHandler.start_link("UserCreated", %{messages_count: 0})
 
     assert GenServer.call(pid, :messages_count) == 0
 
@@ -101,7 +75,7 @@ defmodule Cqrs.Events.ServerTest do
   end
 
   test "should dispatch to sync events handlers" do
-    {:ok, pid} = SyncHandler.start_link("UserCreated")
+    {:ok, pid} = SyncHandler.start_link("UserCreated", %{messages_count: 0})
 
     assert GenServer.call(pid, :messages_count) == 0
 
@@ -111,7 +85,7 @@ defmodule Cqrs.Events.ServerTest do
   end
 
   test "should not crash when sync handler crashes" do
-    {:ok, pid} = SyncCrashingHandler.start_link("UserCreated")
+    {:ok, pid} = SyncCrashingHandler.start_link("UserCreated", %{messages_count: 0})
     Process.unlink(pid) # so our test won't crash
 
     server_pid = Process.whereis(Server)
