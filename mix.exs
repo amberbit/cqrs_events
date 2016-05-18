@@ -7,14 +7,18 @@ defmodule Cqrs.Events.Mixfile do
      elixir: "~> 1.2",
      build_embedded: Mix.env == :prod,
      start_permanent: Mix.env == :prod,
-     deps: deps]
+     deps: deps,
+     description: description,
+     package: package,
+     consolidate_protocols: Mix.env != :test,
+   ]
   end
 
   # Configuration for the OTP application
   #
   # Type "mix help compile.app" for more information
   def application do
-    [applications: [:logger, :moebius, :gproc], # replace phoenix with phoenix_pubsub when released
+    [applications: [:logger, :moebius, :gproc],
      mod: {Cqrs.Events, []}]
   end
 
@@ -35,4 +39,21 @@ defmodule Cqrs.Events.Mixfile do
       {:gen_leader, "~> 0.1.0"},
     ]
   end
+
+  defp description do
+      """
+        This is not production ready yet but I want your feedback.
+          """
+  end
+
+  defp package do
+    [
+      files: ["lib", "mix.exs", "README.md"],
+      maintainers: ["Hubert Łępicki"],
+      licenses: ["MIT"],
+      links: %{"GitHub" => "https://github.com/amberbit/cqrs_commands",
+        "Docs" => "http://hexdocs.pm/cqrs_commands/"}
+    ]
+  end
 end
+
