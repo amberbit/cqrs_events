@@ -15,13 +15,6 @@ defmodule Cqrs.Events.Server do
 
   def trigger(event, payload \\ %{}) do
     GenServer.call(__MODULE__, {event, payload})
-
-  end
-
-  defp find_handlers(event, async) do
-    :gproc.lookup_values({:p, :g, event})
-    |> Enum.filter( &(elem(&1, 1).async == async ) )
-    |> Enum.map( &(elem(&1, 0)) )
   end
 
   defp cast_to_handler(handler_pid, payload) do
@@ -43,11 +36,9 @@ defmodule Cqrs.Events.Server do
     |> insert(%{event: event, payload: payload})
     |> Db.run
 
-    find_handlers(event, true)
-    |> Enum.each( &(cast_to_handler(&1, payload)) )
+    :syn.publish({event, true}, %{payload: payload})
 
-    find_handlers(event, false)
-    |> Enum.each( &(call_handler(&1, payload)) )
+    :syn.multi_call({event, false}, %{payload: payload})
 
     {:reply, :ok, state}
   end

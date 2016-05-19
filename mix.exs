@@ -18,7 +18,7 @@ defmodule Cqrs.Events.Mixfile do
   #
   # Type "mix help compile.app" for more information
   def application do
-    [applications: [:logger, :moebius, :gproc],
+    [applications: [:logger, :moebius, :mnesia, :syn],
      mod: {Cqrs.Events, []}]
   end
 
@@ -35,8 +35,7 @@ defmodule Cqrs.Events.Mixfile do
     [
       {:moebius, "~> 2.0.0"},
       {:poison, "~> 2.0.1" },
-      {:gproc, "~> 0.5.0"},
-      {:gen_leader, "~> 0.1.0"},
+      {:syn, "~> 1.4"}
     ]
   end
 

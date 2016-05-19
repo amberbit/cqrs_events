@@ -4,7 +4,8 @@ defmodule Cqrs.Events.BasicHandler do
       use GenServer
 
       def init(args) do
-        :gproc.reg({:p, :g, args.event_name}, %{async: args.async, mod: __MODULE__})
+        #:gproc.reg({:p, :g, args.event_name}, %{async: args.async, mod: __MODULE__})
+        :syn.join({args.event_name, args.async}, self())
         {:ok, args}
       end
     end

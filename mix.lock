@@ -17,5 +17,6 @@
   "poolboy": {:hex, :poolboy, "1.5.1", "6b46163901cfd0a1b43d692657ed9d7e599853b3b21b95ae5ae0a777cf9b6ca8", [:rebar], []},
   "postgrex": {:hex, :postgrex, "0.11.1", "f48af70c0a58b9bfd1aaa456ec4273624554cfb837726b6a7f0701da4a94b2dd", [:mix], [{:decimal, "~> 1.0", [hex: :decimal, optional: false]}, {:db_connection, "~> 0.2", [hex: :db_connection, optional: false]}, {:connection, "~> 1.0", [hex: :connection, optional: false]}]},
   "ssl_verify_fun": {:hex, :ssl_verify_fun, "1.1.0", "edee20847c42e379bf91261db474ffbe373f8acb56e9079acb6038d4e0bf414f", [:rebar, :make], []},
+  "syn": {:hex, :syn, "1.4.0", "4de3eb031f3f986326a8fcc872162d73570f443304f7fd13caf36e36e28a118b", [:rebar3], []},
   "timex": {:hex, :timex, "1.0.2", "a07f2234298749c0eeede7e6da2534acf35c2c4529c4240d390828953aafd038", [:mix], [{:tzdata, "~> 0.1.8 or ~> 0.5", [hex: :tzdata, optional: false]}, {:combine, "~> 0.7", [hex: :combine, optional: false]}]},
   "tzdata": {:hex, :tzdata, "0.5.7", "10a4176023c2b294f1bbb98594a646ef25d658ca507b2da20a5952072d6080c4", [:mix], [{:hackney, "~> 1.0", [hex: :hackney, optional: false]}]}}
