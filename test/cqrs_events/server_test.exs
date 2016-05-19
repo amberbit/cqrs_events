@@ -5,7 +5,7 @@ defmodule Cqrs.Events.ServerTest.AsyncHandler do
     {:reply, state.messages_count, state}
   end
 
-  def handle_info(message, state) do
+  def handle_event(message, state) do
     {:noreply, %{ state | messages_count: state.messages_count + 1 }}
   end
 end
@@ -17,10 +17,9 @@ defmodule Cqrs.Events.ServerTest.SyncHandler do
     {:reply, state.messages_count, state}
   end
 
-  def handle_info({:syn_multi_call, caller_pid, message}, state) do
-
-    :syn.multi_call_reply(caller_pid, :ok)
-    {:noreply, %{ state | messages_count: state.messages_count + 1 }}
+  def handle_event(message, state) do
+    state = %{ state | messages_count: state.messages_count + 1 }
+    {:reply, :ok, state}
   end
 end
 
@@ -31,7 +30,7 @@ defmodule Cqrs.Events.ServerTest.SyncCrashingHandler do
     {:reply, state.messages_count, state}
   end
 
-  def handle_info({:syn_multi_call, caller_pid, message}, state) do
+  def handle_event(message, state) do
     1 / 0
     {:reply, :ok, %{ state | messages_count: state.messages_count + 1 }}
   end
