@@ -7,8 +7,9 @@ defmodule Cqrs.Events.AsyncHandler do
         GenServer.start_link __MODULE__, Map.merge(opts, %{event_name: event_name, async: true}), []
       end
 
-      def handle_info(message, state) do
-        {:noreply, state} = handle_event(message, state)
+      def handle_info(%{payload: payload}, config) do
+        handle_event(payload, config)
+        {:noreply, config}
       end
     end
   end
