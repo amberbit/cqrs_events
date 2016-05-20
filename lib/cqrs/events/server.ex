@@ -17,18 +17,6 @@ defmodule Cqrs.Events.Server do
     GenServer.call(__MODULE__, {event, payload})
   end
 
-  defp cast_to_handler(handler_pid, payload) do
-    GenServer.cast(handler_pid, %{payload: payload})
-  end
-
-  defp call_handler(handler_pid, payload) do
-    try do
-      GenServer.call(handler_pid, %{payload: payload})
-    catch
-      :exit, _ -> Logger.error "CQRS Event handler crashed:"
-    end
-  end
-
   # Private API
 
   def handle_call({event, payload}, _from, state) do
@@ -36,9 +24,8 @@ defmodule Cqrs.Events.Server do
     |> insert(%{event: event, payload: payload})
     |> Db.run
 
-    :syn.publish({event, true}, %{payload: payload})
-
     :syn.multi_call({event, false}, %{payload: payload})
+    :syn.publish({event, true}, %{payload: payload})
 
     {:reply, :ok, state}
   end
